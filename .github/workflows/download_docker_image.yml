@@ -6,19 +6,22 @@ on:
 
 jobs:
   handle_image:
+    env:
+        my_ali_registryaddr: registry.cn-shenzhen.aliyuncs.com/action_0/github
     runs-on: ubuntu-latest
     steps:
     
     - name: Log into registry
-      env:
-        my_ali_registryaddr: registry.cn-shenzhen.aliyuncs.com/action_0/github
       run: |
         echo -n "${{ secrets.registrytoken }}" | docker login --password-stdin --username=${{ secrets.registryuser }} $my_ali_registryaddr
-      
+    
+    - name: set image name and version
+      run: |
+        echo "::set-env name=IMAGE_NAME::" $(echo -n ${{github.ref}} | sed  -r "s#(^refs/tags/)|(@@.*$)|\s##g")
+        echo "::set-env name=IMAGE_VERSION::" $(echo -n ${{github.ref}} | sed  -r "s#(^.*@@)|\s##g")
+        
     - name: Pull image
       run: |
-        IMAGE_NAME=`echo -n ${{github.ref}} | sed  -r "s#(^refs/tags/)|(@@.*$)|\s##g"`
-        IMAGE_VERSION=`echo -n ${{github.ref}} | sed  -r "s#(^.*@@)|\s##g"`
         echo "[Debug]IMAGE_NAME: " $IMAGE_NAME
         echo "[Debug]IMAGE_VERSION: " $IMAGE_VERSION
         docker pull "$IMAGE_NAME":"$IMAGE_VERSION"
@@ -26,6 +29,7 @@ jobs:
       
     - name: Push image
       run: |
+        
         docker tag "$IMAGE_NAME":"$IMAGE_VERSION" $my_ali_registryaddr:"$IMAGE_NAME"@@"$IMAGE_VERSION"
         docker push $my_ali_registryaddr:"$IMAGE_NAME"@@"$IMAGE_VERSION"
         echo "==========="
