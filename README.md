@@ -1,7 +1,7 @@
 # Description
 This just a GitHub action script repository
 
-#Use
+# Use
 Replace the docker image tag separator with ```_._```
 
 and the use it to create a repository release
