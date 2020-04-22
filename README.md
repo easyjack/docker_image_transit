@@ -4,7 +4,7 @@ This just a GitHub action script repository
 # Use
 Replace the docker image tag separator with ```_._```
 
-and the use it to create a repository release
+and then use it to create a repository release
 
 wait a moment
 
