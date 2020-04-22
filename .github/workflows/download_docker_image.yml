@@ -17,23 +17,25 @@ jobs:
     
     - name: set image name and version
       run: |
-        echo "::set-env name=IMAGE_NAME::"$(echo -n ${{github.ref}} | sed  -r "s#(^refs/tags/)|(@@.*$)|\s##g")
-        echo "::set-env name=IMAGE_VERSION::"$(echo -n ${{github.ref}} | sed  -r "s#(^.*@@)|\s##g")
+        echo "::set-env name=IMAGE_NAME::"$(echo -n ${{github.ref}} | sed  -r "s#(^refs/tags/)|(_\._.*$)|\s##g")
+        echo "::set-env name=IMAGE_VERSION::"$(echo -n ${{github.ref}} | sed  -r "s#(^.*_\._)|\s##g")
+        echo "::set-env name=IMAGE::"${IMAGE_NAME}_._${IMAGE_VERSION}
         
     - name: Pull image
       run: |
-        echo "[Debug]IMAGE_NAME:"$IMAGE_NAME
+        echo "[Debug]IMAGE:"$IMAGE_NAME
         echo "[Debug]IMAGE_VERSION:"$IMAGE_VERSION
+        echo "[Debug]IMAGE tag:"$IMAGE
         docker pull "$IMAGE_NAME":"$IMAGE_VERSION"
         docker images
       
     - name: Push image
       run: |
         
-        docker tag "$IMAGE_NAME":"$IMAGE_VERSION" $my_ali_registryaddr:"$IMAGE_NAME"@@"$IMAGE_VERSION"
-        docker push $my_ali_registryaddr:"$IMAGE_NAME"@@"$IMAGE_VERSION"
+        docker tag "$IMAGE_NAME":"$IMAGE_VERSION" $my_ali_registryaddr:"$IMAGE"
+        docker push $"my_ali_registryaddr":"$IMAGE"
         echo "==========="
         echo "=[succeed]="
         echo "Run command at your server:"
-        echo "docker pull $my_ali_registryaddr:$IMAGE_NAME@@$IMAGE_VERSION"
+        echo "docker pull $my_ali_registryaddr:$IMAGE"
         echo "==========="
