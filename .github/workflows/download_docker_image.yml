@@ -12,7 +12,8 @@ jobs:
     - name: Log into registry
       env:
         my_registryaddr: registry.cn-shenzhen.aliyuncs.com/action_0/github
-      run: echo -n "${{ secrets.registrytoken }}" | docker login --username=${{ secrets.registryuser }} ${{ secrets.registryaddr }} --password-stdin
+      run: |
+        #echo -n "${{ secrets.registrytoken }}" | docker login --username=${{ secrets.registryuser }} ${{ secrets.registryaddr }} --password-stdin
       
     - name: debug
       run: |
