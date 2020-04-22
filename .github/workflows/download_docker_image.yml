@@ -2,7 +2,7 @@ name: pull docker image and push to ali registry
 
 on:
   release:
-    types: [created, edited]
+    types: [created]
 
 jobs:
   handle_image:
@@ -17,8 +17,8 @@ jobs:
       
     - name: Pull image
       run: |
-        IMAGE_NAME=`echo -n ${{github.ref}} | sed  -r "s@(^refs/tags/)|(##.*$)@@g"`
-        IMAGE_VERSION= `echo -n $my_registryaddr | sed  -r "s@^.*##@@"`
+        IMAGE_NAME=`echo -n ${{github.ref}} | sed  -r "s#(^refs/tags/)|(@@.*$)|\s##g"`
+        IMAGE_VERSION= `echo -n $my_registryaddr | sed  -r "s#^.*@@##"`
         echo "[Debug]IMAGE_NAME: " $IMAGE_NAME
         echo "[Debug]IMAGE_VERSION: " $IMAGE_VERSION
         docker pull "$IMAGE_NAME":"$IMAGE_VERSION"
