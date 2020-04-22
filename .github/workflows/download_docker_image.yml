@@ -35,8 +35,8 @@ jobs:
     - name: Upload the archive file to artifact space
       uses: actions/upload-artifact@v1
       with:
-       name: $IMAGE_NAME:$IMAGE_VERSION
-       path: $IMAGE_NAME:$IMAGE_VERSION.tar.gz
+       name: ${{IMAGE_NAME}}:${{$IMAGE_VERSION}}
+       path: ${{IMAGE_NAME}}:${{$IMAGE_VERSION}}.tar.gz
       
     - name: Push image
       run: |
