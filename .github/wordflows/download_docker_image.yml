@@ -1,0 +1,31 @@
+name: build docker image and deploy
+
+on:
+  release:
+    types: [created, edited]
+
+jobs:
+  push_image:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Log into registry
+      env:
+        my_registryaddr: registry.cn-shenzhen.aliyuncs.com/action_0/github
+      run: echo -n "${{ secrets.registrytoken }}" | docker login --username=${{ secrets.registryuser }} ${{ secrets.registryaddr }} --password-stdin
+      
+    - name: debug
+      run: |
+      echo "${{github.head_ref}}"
+      echo "${{github.ref}}"
+      echo "${{github.base_ref}}"
+      
+    - name: Pull image
+      run: |
+      #image_name=`${{ github.ref }}`
+      #docker pull ${{ github.ref }} 
+      
+    - name: Push image
+      run: |
+      #docker tag $my_registryaddr
+      #docker push
