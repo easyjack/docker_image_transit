@@ -18,7 +18,7 @@ jobs:
     - name: Pull image
       run: |
         IMAGE_NAME=`echo -n ${{github.ref}} | sed  -r "s#(^refs/tags/)|(@@.*$)|\s##g"`
-        IMAGE_VERSION= `echo -n $my_registryaddr | sed  -r "s#^.*@@##"`
+        IMAGE_VERSION= `echo -n $my_registryaddr | sed  -r "s#(^.*@@)|\s##g"`
         echo "[Debug]IMAGE_NAME: " $IMAGE_NAME
         echo "[Debug]IMAGE_VERSION: " $IMAGE_VERSION
         docker pull "$IMAGE_NAME":"$IMAGE_VERSION"
