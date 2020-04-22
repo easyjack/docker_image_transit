@@ -19,23 +19,31 @@ jobs:
       run: |
         echo "::set-env name=IMAGE_NAME::"$(echo -n ${{github.ref}} | sed  -r "s#(^refs/tags/)|(_\._.*$)|\s##g")
         echo "::set-env name=IMAGE_VERSION::"$(echo -n ${{github.ref}} | sed  -r "s#(^.*_\._)|\s##g")
-        echo "::set-env name=IMAGE::"${IMAGE_NAME}_._${IMAGE_VERSION}
         
     - name: Pull image
       run: |
+        echo "::set-env name=IMAGE::"${IMAGE_NAME}"_._"${IMAGE_VERSION}
         echo "[Debug]IMAGE:"$IMAGE_NAME
         echo "[Debug]IMAGE_VERSION:"$IMAGE_VERSION
-        echo "[Debug]IMAGE tag:"$IMAGE
         docker pull "$IMAGE_NAME":"$IMAGE_VERSION"
         docker images
+    
+    - name: Save image to a tar.gz archive file
+      run: |
+         docker save "$IMAGE_NAME":"$IMAGE_VERSION" | gzip > "$IMAGE_NAME":"$IMAGE_VERSION".tar.gz
+    
+    - name: Upload the archive file to artifact space
+      uses: actions/upload-artifact@v1
+      with:
+       name: $IMAGE_NAME:$IMAGE_VERSION
+       path: $IMAGE_NAME:$IMAGE_VERSION.tar.gz
       
     - name: Push image
       run: |
-        
         docker tag "$IMAGE_NAME":"$IMAGE_VERSION" $my_ali_registryaddr:"$IMAGE"
         docker push "$my_ali_registryaddr":"$IMAGE"
-        echo "==========="
-        echo "=[succeed]="
+        echo "* v * =============="
+        echo "* v * ==[succeed]==="
         echo "Run command at your server:"
         echo "docker pull $my_ali_registryaddr:$IMAGE"
-        echo "==========="
+        echo "* v * =============="
