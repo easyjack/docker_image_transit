@@ -30,13 +30,13 @@ jobs:
     
     - name: Save image to a tar.gz archive file
       run: |
-         docker save "$IMAGE_NAME":"$IMAGE_VERSION" | gzip > "$IMAGE_NAME":"$IMAGE_VERSION".tar.gz
+         docker save "$IMAGE_NAME":"$IMAGE_VERSION" | gzip > "$IMAGE_NAME"_._"$IMAGE_VERSION".tar.gz
     
     - name: Upload the archive file to artifact space
       uses: actions/upload-artifact@v1
       with:
        name: ${{env.IMAGE_NAME}}_${{env.IMAGE_VERSION}}
-       path: ${{env.IMAGE_NAME}}:${{env.IMAGE_VERSION}}.tar.gz
+       path: ${{env.IMAGE_NAME}}_._${{env.IMAGE_VERSION}}.tar.gz
       
     - name: Push image
       run: |
