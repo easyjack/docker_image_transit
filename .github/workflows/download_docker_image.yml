@@ -33,7 +33,7 @@ jobs:
       run: |
         
         docker tag "$IMAGE_NAME":"$IMAGE_VERSION" $my_ali_registryaddr:"$IMAGE"
-        docker push $"my_ali_registryaddr":"$IMAGE"
+        docker push "$my_ali_registryaddr":"$IMAGE"
         echo "==========="
         echo "=[succeed]="
         echo "Run command at your server:"
