@@ -1,32 +1,33 @@
-name: build docker image and deploy
+name: pull docker image and push to ali registry
 
 on:
   release:
     types: [created, edited]
 
 jobs:
-  push_image:
+  handle_image:
     runs-on: ubuntu-latest
     steps:
     
     - name: Log into registry
       env:
-        my_registryaddr: registry.cn-shenzhen.aliyuncs.com/action_0/github
+        my_ali_registryaddr: registry.cn-shenzhen.aliyuncs.com/action_0/github
       run: |
-        #echo -n "${{ secrets.registrytoken }}" | docker login --username=${{ secrets.registryuser }} ${{ secrets.registryaddr }} --password-stdin
-      
-    - name: debug
-      run: |
-        echo "${{github.head_ref}}"
-        echo "${{github.ref}}"
-        echo "${{github.base_ref}}"
+        echo -n "${{ secrets.registrytoken }}" | docker login --password-stdin --username=${{ secrets.registryuser }} $my_ali_registryaddr
       
     - name: Pull image
       run: |
-        #image_name=`${{ github.ref }}`
-        #docker pull ${{ github.ref }} 
+        IAMGE_NAME=`echo -n $my_registryaddr | sed  -r "s@(^refs/tags/)|(##.*$)@@g"`
+        IMAGE_VERSION= `echo -n $my_registryaddr | sed  -r "s@^.*##@@"`
+        docker pull "$IAMGE_NAME":"$IMAGE_VERSION"
+        docker images
       
     - name: Push image
       run: |
-        #docker tag $my_registryaddr
-        #docker push
+        docker tag "$IAMGE_NAME":"$IMAGE_VERSION" $my_ali_registryaddr:"$IAMGE_NAME"@"$IMAGE_VERSION"
+        docker push $my_ali_registryaddr:"$IAMGE_NAME"@"$IMAGE_VERSION"
+        echo "==========="
+        echo "=[succeed]="
+        echo "Run command at your server:"
+        echo "docker pull $my_ali_registryaddr:$IAMGE_NAME@$IMAGE_VERSION"
+        echo "==========="
