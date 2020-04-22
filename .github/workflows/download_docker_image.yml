@@ -16,16 +16,16 @@ jobs:
       
     - name: debug
       run: |
-      echo "${{github.head_ref}}"
-      echo "${{github.ref}}"
-      echo "${{github.base_ref}}"
+        echo "${{github.head_ref}}"
+        echo "${{github.ref}}"
+        echo "${{github.base_ref}}"
       
     - name: Pull image
       run: |
-      #image_name=`${{ github.ref }}`
-      #docker pull ${{ github.ref }} 
+        #image_name=`${{ github.ref }}`
+        #docker pull ${{ github.ref }} 
       
     - name: Push image
       run: |
-      #docker tag $my_registryaddr
-      #docker push
+        #docker tag $my_registryaddr
+        #docker push
