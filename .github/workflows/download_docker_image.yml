@@ -17,13 +17,13 @@ jobs:
     
     - name: set image name and version
       run: |
-        echo "::set-env name=IMAGE_NAME::" $(echo -n ${{github.ref}} | sed  -r "s#(^refs/tags/)|(@@.*$)|\s##g")
-        echo "::set-env name=IMAGE_VERSION::" $(echo -n ${{github.ref}} | sed  -r "s#(^.*@@)|\s##g")
+        echo "::set-env name=IMAGE_NAME::"$(echo -n ${{github.ref}} | sed  -r "s#(^refs/tags/)|(@@.*$)|\s##g")
+        echo "::set-env name=IMAGE_VERSION::"$(echo -n ${{github.ref}} | sed  -r "s#(^.*@@)|\s##g")
         
     - name: Pull image
       run: |
-        echo "[Debug]IMAGE_NAME: " $IMAGE_NAME
-        echo "[Debug]IMAGE_VERSION: " $IMAGE_VERSION
+        echo "[Debug]IMAGE_NAME:"$IMAGE_NAME
+        echo "[Debug]IMAGE_VERSION:"$IMAGE_VERSION
         docker pull "$IMAGE_NAME":"$IMAGE_VERSION"
         docker images
       
