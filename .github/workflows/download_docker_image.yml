@@ -18,11 +18,12 @@ jobs:
     - name: set image name and version
       run: |
         echo "::set-env name=IMAGE_NAME::"$(echo -n ${{github.ref}} | sed  -r "s#(^refs/tags/)|(_\._.*$)|\s##g")
+        echo "::set-env name=IMAGE_TAG_NAME::"$(echo -n ${{github.ref}} | sed  -r "s#(^.*/)|(_\._.*$)|\s##g")
         echo "::set-env name=IMAGE_VERSION::"$(echo -n ${{github.ref}} | sed  -r "s#(^.*_\._)|\s##g")
         
     - name: Pull image
       run: |
-        echo "::set-env name=IMAGE::"${IMAGE_NAME}"_._"${IMAGE_VERSION}
+        echo "::set-env name=IMAGE::"${IMAGE_TAG_NAME}"_._"${IMAGE_VERSION}
         echo "[Debug]IMAGE:"$IMAGE_NAME
         echo "[Debug]IMAGE_VERSION:"$IMAGE_VERSION
         docker pull "$IMAGE_NAME":"$IMAGE_VERSION"
@@ -30,13 +31,13 @@ jobs:
     
     - name: Save image to a tar.gz archive file
       run: |
-         docker save "$IMAGE_NAME":"$IMAGE_VERSION" | gzip > "$IMAGE_NAME"_._"$IMAGE_VERSION".tar.gz
+         docker save "$IMAGE_NAME":"$IMAGE_VERSION" | gzip > "$IMAGE".tar.gz
     
     - name: Upload the archive file to artifact space
       uses: actions/upload-artifact@v1
       with:
-       name: ${{env.IMAGE_NAME}}_${{env.IMAGE_VERSION}}
-       path: ${{env.IMAGE_NAME}}_._${{env.IMAGE_VERSION}}.tar.gz
+       name: ${{env.IMAGE}}
+       path: ${{env.IMAGE}}.tar.gz
       
     - name: Push image
       run: |
