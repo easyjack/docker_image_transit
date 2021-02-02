@@ -5,15 +5,16 @@ on:
     types: [created]
 
 jobs:
-  handle_image:
+  Process_docker_image:
     env:
-        my_ali_registryaddr: registry.cn-shenzhen.aliyuncs.com/action_0/github
+        my_ali_registryaddr: swr.ap-southeast-1.myhuaweicloud.com
     runs-on: ubuntu-latest
     steps:
     
     - name: Log into registry
       run: |
-        echo -n "${{ secrets.registrytoken }}" | docker login --password-stdin --username=${{ secrets.registryuser }} $my_ali_registryaddr
+        #echo -n "${{ secrets.registrytoken }}" | docker login --password-stdin --username=${{ secrets.registryuser }} $my_ali_registryaddr
+        docker login -u ap-southeast-1@9F9190HK26QRB2ZCDPRG -p 15d39b7f20351a9b4e137426d837133b79bc248ed9e3a6bb8cf25e263181b14e
     
     - name: set image name and version
       run: |
@@ -41,10 +42,10 @@ jobs:
       
     - name: Push image
       run: |
-        docker tag "$IMAGE_NAME":"$IMAGE_VERSION" $my_ali_registryaddr:"$IMAGE"
-        docker push "$my_ali_registryaddr":"$IMAGE"
+        docker tag "$IMAGE_NAME":"$IMAGE_VERSION" $my_ali_registryaddr/"$IMAGE"
+        docker push "$my_ali_registryaddr"/"$IMAGE"
         echo "* v * =============="
         echo "* v * ==[succeed]==="
         echo "Run command at your server:"
-        echo "docker pull $my_ali_registryaddr:$IMAGE"
+        echo "docker pull $my_ali_registryaddr/$IMAGE"
         echo "* v * =============="
