@@ -14,7 +14,7 @@ jobs:
     - name: Log into registry
       run: |
         #echo -n "${{ secrets.registrytoken }}" | docker login --password-stdin --username=${{ secrets.registryuser }} $my_ali_registryaddr
-        docker login -u ap-southeast-1@9F9190HK26QRB2ZCDPRG -p 15d39b7f20351a9b4e137426d837133b79bc248ed9e3a6bb8cf25e263181b14e
+        docker login -u ap-southeast-1@9F9190HK26QRB2ZCDPRG -p 15d39b7f20351a9b4e137426d837133b79bc248ed9e3a6bb8cf25e263181b14e $my_ali_registryaddr
     
     - name: set image name and version
       run: |
